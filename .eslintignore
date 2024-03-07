@@ -1,0 +1,6 @@
+node_modules\
+dist
+coverage
+/src/testing
+package.json
+package-lock.json
