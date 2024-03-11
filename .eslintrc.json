@@ -24,7 +24,7 @@
           "error",
           {
             "type": "element",
-            "prefix": ["aor"],
+            "prefix": ["aor", "page"],
             "style": "kebab-case"
           }
         ],

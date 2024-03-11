@@ -1,0 +1,52 @@
+<div class="ls-visor" #visor>
+  <div
+    id="zoom"
+    class="zoom-container"
+    #zoomContainer
+    [ngStyle]="{
+      width: canvasSize.width,
+      height: canvasSize.height
+    }"
+    (wheel)="adjustZoom($event, zoomContainer)">
+    <div
+      cdkDrag
+      class="ls-map"
+      (cdkDragMoved)="onDrag($event)"
+      (cdkDragEnded)="onDragEnd($event)"
+      (cdkDragStarted)="onDragStart($event)"
+      [ngStyle]="{
+        width: canvasSize.width + 'px',
+        height: canvasSize.height + 'px'
+      }">
+      @for (object of mapObjects; track $index) {
+        <app-map-object
+          cdkDrag
+          (cdkDragMoved)="onDragMapObject($event, object)"
+          (cdkDragStarted)="onDragStartMapObject($event, object)"
+          cdkDragBoundary=".ls-map"
+          class="ls-map-object"
+          [ngStyle]="{
+            transform:
+              'translate(' +
+              object.position.x +
+              'px, ' +
+              object.position.y +
+              'px) rotate(' +
+              (object.rotation ?? 0) +
+              'deg)',
+            'transform-origin': 'center',
+            width: object.size.width + 'px',
+            height: object.size.height + 'px' || '100px',
+            'background-color': object.backgroundColor ?? 'transparent',
+            'border-style': object.borderStyle ?? 'none',
+            'border-color': object.borderColor ?? 'transparent',
+            'border-width': object.borderWidth ?? '0px',
+            'border-radius': object.borderRadius ?? '0px'
+          }">
+          <div class="box"></div>
+        </app-map-object>
+      }
+    </div>
+  </div>
+</div>
+<ng-content> </ng-content>

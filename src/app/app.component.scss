@@ -1,0 +1,30 @@
+.main-container {
+  height: 100%;
+  width: 100%;
+
+  .main-menu {
+    padding-right: 2rem;
+
+    li.menu-link {
+      padding: 0.5rem;
+
+      &.active-link {
+        background-color: purple;
+        color: purple;
+      }
+
+      a {
+        color: white;
+      }
+
+    }
+  }
+
+  .main-content {
+    height: 100%;
+
+    .page-content {
+      padding: 1rem;
+    }
+  }
+}

@@ -1,0 +1,48 @@
+:host {
+  display: block;
+}
+
+.ls-visor {
+  background-color: #fff;
+  width: 100%;
+  height: 768px;
+  overflow: hidden;
+  position: relative;
+}
+
+.limits {
+  position: relative;
+  background-color: red;
+}
+
+.zoom-container {
+  background-color: green;
+  position: absolute;
+  z-index: 3;
+}
+
+.ls-map {
+  background-color: rgb(68, 140, 198);
+  position: relative;
+  cursor: move;
+  left: 0;
+  top: 0;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  .ls-map-object {
+    // position: absolute;
+    overflow: hidden;
+    position: relative;
+    display: block;
+  }
+
+  // &:active {
+  //   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  //             0 8px 10px 1px rgba(0, 0, 0, 0.14),
+  //             0 3px 14px 2px rgba(0, 0, 0, 0.12);
+
+  // }
+}
