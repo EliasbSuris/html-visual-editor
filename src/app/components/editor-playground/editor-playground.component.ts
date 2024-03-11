@@ -1,7 +1,8 @@
-import { CdkDrag, CdkDragEnd, CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
-import { JsonPipe, NgStyle } from '@angular/common';
-import { Component, ElementRef, Renderer2, ViewChild, inject, signal } from '@angular/core';
+import { CdkDrag, CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
+import { JsonPipe, NgClass, NgStyle } from '@angular/common';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild, inject } from '@angular/core';
 import { MapObjectComponent } from '@components/map-object/map-object.component';
+import Panzoom, { PanzoomObject } from '@panzoom/panzoom';
 
 interface Point {
   x: number;
@@ -23,19 +24,18 @@ interface MapObject {
   fontColor?: string;
   adjustPosition: Point;
   rotation?: number;
+  keepRatio: boolean;
 }
 
 @Component({
   selector: 'aor-editor-playground',
   standalone: true,
-  imports: [NgStyle, CdkDrag, MapObjectComponent, JsonPipe],
+  imports: [NgStyle, NgClass, CdkDrag, MapObjectComponent, JsonPipe],
   templateUrl: './editor-playground.component.html',
   styleUrl: './editor-playground.component.scss',
 })
-export class EditorPlaygroundComponent {
-  @ViewChild('zoomContainer') zoomContainer!: ElementRef;
-  @ViewChild('visor') visor!: ElementRef;
-  readonly renderer = inject(Renderer2);
+export class EditorPlaygroundComponent implements OnInit {
+  @ViewChild('map', { static: true }) map!: ElementRef;
 
   mapObjects: MapObject[] = [
     {
@@ -47,11 +47,12 @@ export class EditorPlaygroundComponent {
       borderColor: 'black',
       borderWidth: 2,
       borderRadius: 10,
-      zIndex: 1,
+      zIndex: 3,
       text: '1',
       fontSize: 16,
       fontColor: 'white',
       rotation: 45,
+      keepRatio: false,
     },
     {
       id: '2',
@@ -62,10 +63,11 @@ export class EditorPlaygroundComponent {
       borderColor: 'black',
       borderWidth: 2,
       borderRadius: 10,
-      zIndex: 1,
+      zIndex: 2,
       text: '2',
       fontSize: 16,
       fontColor: 'white',
+      keepRatio: false,
     },
     {
       id: '3',
@@ -80,6 +82,7 @@ export class EditorPlaygroundComponent {
       text: '3',
       fontSize: 16,
       fontColor: 'white',
+      keepRatio: true,
     },
   ];
 
@@ -90,100 +93,20 @@ export class EditorPlaygroundComponent {
   position = { x: 0, y: 0 };
   adjustedPosition = { x: 0, y: 0 };
 
-  adjustZoom(event: WheelEvent, element: HTMLDivElement): void {
-    const delta = event.deltaY;
-    // max zoom level 4 min zoom level 0.5
-    if (delta > 0 && this.zoomLevel <= 0.5) {
-      return;
-    }
+  panZoom!: PanzoomObject;
+  selectedElementId: string | null = null;
 
-    if (delta < 0 && this.zoomLevel >= 4) {
-      return;
-    }
-
-    this.zoomLevel = delta > 0 ? this.zoomLevel - 0.1 : this.zoomLevel + 0.1;
-
-    const targetElement = event.target as Element;
-    const style = window.getComputedStyle(targetElement);
-    const matrix = new DOMMatrixReadOnly(style.transform);
-
-    // if (matrix?.is2D) {
-    //   const x = matrix.e;
-    //   const y = matrix.f;
-    //   console.log('translate X', x, event.offsetX);
-    //   console.log(event.clientX);
-    //   console.log('translate Y', y, event.offsetY);
-    //   console.log(event.clientY);
-    //   console.log('zoom factor', this.zoomLevel);
-    //   this.zoomOrigin.y = +y + event.offsetY;
-    //   this.zoomOrigin.x = +x + event.offsetX;
-    // } else {
-    //   // Ajusta el origen del zoom basándote en la posición del ratón
-    //   this.zoomOrigin.x = event.offsetX;
-    //   this.zoomOrigin.y = event.offsetY;
-    // }
-
-    // 36px left paddings
-    // 84px header height and paddings
-    this.zoomOrigin.x = event.clientX - 36;
-    this.zoomOrigin.y = event.clientY - 84;
-
-    this.renderer.setStyle(element, 'transform', `scale(${this.zoomLevel})`);
-    this.renderer.setStyle(element, 'transform-origin', `${this.zoomOrigin.x}px ${this.zoomOrigin.y}px`);
-    // console.log(this.zoomOrigin);
-  }
-
-  moveObject(event: any): void {
-    // console.log(event);
-  }
-
-  onDrag(event: CdkDragMove<any>): void {
-    // console.log(event, event.source.data);
-    // Calcula la distancia movida ajustada por el nivel de zoom
-    const adjustedX = event.distance.x / this.zoomLevel;
-    const adjustedY = event.distance.y / this.zoomLevel;
-
-    // Actualiza la posición ajustada basándote en la posición inicial más la distancia movida
-    this.adjustedPosition.x = this.position.x + adjustedX;
-    this.adjustedPosition.y = this.position.y + adjustedY;
-
-    // Aplica la transformación al elemento basándote en la posición ajustada acumulada
-    const element = event.source.element.nativeElement;
-    this.zoomContainer.nativeElement.style.left = `${event.source.getFreeDragPosition().x}px`;
-    this.zoomContainer.nativeElement.style.top = `${event.source.getFreeDragPosition().y}px`;
-    element.style.transform = `translate(${0}px, ${0}px)`;
-
-    console.log(this.visor.nativeElement.offsetWidth / 2);
-
-    // La parte izquierda del zoomContainer no puede ser mayor al centro del visor y la parte superior no puede ser mayor a la mitad del visor. Usa
-    if (event.source.getFreeDragPosition().x > this.visor.nativeElement.offsetWidth / 2) {
-      this.zoomContainer.nativeElement.style.left = `${this.visor.nativeElement.offsetWidth / 2}px`;
-    }
-    if (event.source.getFreeDragPosition().y > this.visor.nativeElement.offsetHeight / 2) {
-      this.zoomContainer.nativeElement.style.top = `${this.visor.nativeElement.offsetHeight / 2}px`;
-    }
-
-    // if (event.source.getFreeDragPosition().x > 0) {
-    //   this.zoomContainer.nativeElement.style.left = `${0}px`;
-    // }
-    // if (event.source.getFreeDragPosition().y > 0) {
-    //   this.zoomContainer.nativeElement.style.top = `${0}px`;
-    // }
-
-    // if (event.source.getFreeDragPosition().x < this.visor.nativeElement.offsetWidth - this.zoomContainer.nativeElement.offsetWidth) {
-    //   this.zoomContainer.nativeElement.style.left = `${this.visor.nativeElement.offsetWidth - this.zoomContainer.nativeElement.offsetWidth}px`;
-    // }
-    // if (event.source.getFreeDragPosition().y < this.visor.nativeElement.offsetHeight - this.zoomContainer.nativeElement.offsetHeight) {
-    //   this.zoomContainer.nativeElement.style.top = `${this.visor.nativeElement.offsetHeight - this.zoomContainer.nativeElement.offsetHeight}px`;
-    // }
-  }
-
-  onDragEnd(event: CdkDragEnd): void {}
-
-  onDragStart(event: CdkDragStart): void {
-    // Cuando el arrastre comienza, guarda la posición actual como la posición inicial
-    this.position.x = this.adjustedPosition.x;
-    this.position.y = this.adjustedPosition.y;
+  ngOnInit(): void {
+    this.panZoom = Panzoom(this.map.nativeElement, {
+      maxScale: 5,
+      minScale: 0.5,
+      canvas: true,
+      excludeClass: 'ls-map-object',
+      contain: 'outside',
+    });
+    console.log(this.panZoom);
+    this.panZoom.pan(0, 0);
+    this.panZoom.zoom(1, { animate: true });
   }
 
   onDragMapObject(event: CdkDragMove<any>, mapObject: MapObject): void {
@@ -204,5 +127,18 @@ export class EditorPlaygroundComponent {
     // Cuando el arrastre termina, actualiza la posición del objeto del mapa con la posición ajustada
     mapObject.position.x = mapObject.adjustPosition.x;
     mapObject.position.y = mapObject.adjustPosition.y;
+  }
+
+  zoom(event: WheelEvent): void {
+    const zoom = this.panZoom.zoomWithWheel(event);
+    this.zoomLevel = zoom.scale;
+  }
+
+  selectElement(elementId: string): void {
+    this.selectedElementId = elementId;
+  }
+
+  isElementSelected(elementId: string): boolean {
+    return this.selectedElementId === elementId;
   }
 }

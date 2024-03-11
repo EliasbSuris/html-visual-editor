@@ -4,39 +4,23 @@
 
 .ls-visor {
   background-color: #fff;
-  width: 100%;
+  width: 1000px;
   height: 768px;
-  overflow: hidden;
   position: relative;
-}
-
-.limits {
-  position: relative;
-  background-color: red;
-}
-
-.zoom-container {
-  background-color: green;
-  position: absolute;
-  z-index: 3;
 }
 
 .ls-map {
   background-color: rgb(68, 140, 198);
   position: relative;
-  cursor: move;
-  left: 0;
-  top: 0;
+  height: 2000px;
+  width: 2000px;
 
   &:active {
     cursor: grabbing;
   }
 
   .ls-map-object {
-    // position: absolute;
-    overflow: hidden;
-    position: relative;
-    display: block;
+    position: absolute;
   }
 
   // &:active {

@@ -1,0 +1,41 @@
+:host {
+  display: block;
+  box-sizing: border-box;
+
+  .handle {
+    display: none;
+    background-color: Black;
+    height: 10px;
+    position: absolute;
+    width: 12px;
+
+    &.se {
+      bottom: 0;
+      clip-path: circle(45%);
+      cursor: se-resize;
+      right: 0;
+    }
+
+    &.s {
+      bottom: 0;
+      clip-path: circle(45%);
+      cursor: s-resize;
+      right: 50%;
+    }
+
+    &.e {
+      cursor: e-resize;
+      clip-path: circle(45%);
+      right: 0;
+      bottom: 50%;
+    }
+  }
+
+  &.selected {
+    border: 2px dashed black;
+
+    .handle {
+      display: block;
+    }
+  }
+}

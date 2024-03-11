@@ -1,52 +1,32 @@
-<div class="ls-visor" #visor>
-  <div
-    id="zoom"
-    class="zoom-container"
-    #zoomContainer
-    [ngStyle]="{
-      width: canvasSize.width,
-      height: canvasSize.height
-    }"
-    (wheel)="adjustZoom($event, zoomContainer)">
-    <div
-      cdkDrag
-      class="ls-map"
-      (cdkDragMoved)="onDrag($event)"
-      (cdkDragEnded)="onDragEnd($event)"
-      (cdkDragStarted)="onDragStart($event)"
-      [ngStyle]="{
-        width: canvasSize.width + 'px',
-        height: canvasSize.height + 'px'
-      }">
-      @for (object of mapObjects; track $index) {
-        <app-map-object
-          cdkDrag
-          (cdkDragMoved)="onDragMapObject($event, object)"
-          (cdkDragStarted)="onDragStartMapObject($event, object)"
-          cdkDragBoundary=".ls-map"
-          class="ls-map-object"
-          [ngStyle]="{
-            transform:
-              'translate(' +
-              object.position.x +
-              'px, ' +
-              object.position.y +
-              'px) rotate(' +
-              (object.rotation ?? 0) +
-              'deg)',
-            'transform-origin': 'center',
-            width: object.size.width + 'px',
-            height: object.size.height + 'px' || '100px',
-            'background-color': object.backgroundColor ?? 'transparent',
-            'border-style': object.borderStyle ?? 'none',
-            'border-color': object.borderColor ?? 'transparent',
-            'border-width': object.borderWidth ?? '0px',
-            'border-radius': object.borderRadius ?? '0px'
-          }">
-          <div class="box"></div>
-        </app-map-object>
-      }
-    </div>
+<div class="ls-visor" #visor (wheel)="zoom($event)">
+  <div id="map" class="ls-map" #map>
+    @for (element of mapObjects; track $index) {
+      <aor-map-object
+        cdkDrag
+        [height]="element.size.height.toString()"
+        [width]="element.size.width.toString()"
+        [keepRatio]="element.keepRatio"
+        (click)="selectElement(element.id)"
+        (cdkDragMoved)="onDragMapObject($event, element)"
+        (cdkDragStarted)="onDragStartMapObject($event, element)"
+        cdkDragBoundary=".ls-map"
+        class="ls-map-object"
+        [ngClass]="{ selected: isElementSelected(element.id) }"
+        [ngStyle]="{
+          transform:
+            'translate(' +
+            element.position.x +
+            'px, ' +
+            element.position.y +
+            'px) rotate(' +
+            (element.rotation ?? 0) +
+            'deg)',
+          'transform-origin': 'center',
+          'background-color': element.backgroundColor ?? 'transparent',
+          'z-index': element.zIndex
+        }">
+        <div class="box"></div>
+      </aor-map-object>
+    }
   </div>
 </div>
-<ng-content> </ng-content>
