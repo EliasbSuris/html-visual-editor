@@ -1,31 +1,34 @@
-<div class="ls-visor" #visor (wheel)="zoom($event)">
+<div class="ls-visor" #visor (wheel)="zoom($event)" (dblclick)="unSelectElement()" aorResizeContainer>
   <div id="map" class="ls-map" #map>
     @for (element of mapObjects; track $index) {
       <aor-map-object
+        aorResizeElement
         cdkDrag
-        [height]="element.size.height.toString()"
-        [width]="element.size.width.toString()"
+        [containerHeight]="element | resizeContainerHeight"
+        [containerWidth]="element | resizeContainerWidth"
         [keepRatio]="element.keepRatio"
-        (click)="selectElement(element.id)"
+        [zoomLevel]="zoomLevel"
+        (click)="selectElement(element.id); $event.stopPropagation()"
         (cdkDragMoved)="onDragMapObject($event, element)"
         (cdkDragStarted)="onDragStartMapObject($event, element)"
         cdkDragBoundary=".ls-map"
         class="ls-map-object"
         [ngClass]="{ selected: isElementSelected(element.id) }"
         [ngStyle]="{
-          transform:
-            'translate(' +
-            element.position.x +
-            'px, ' +
-            element.position.y +
-            'px) rotate(' +
-            (element.rotation ?? 0) +
-            'deg)',
+          transform: 'translate(' + element.position.x + 'px, ' + element.position.y + 'px)',
           'transform-origin': 'center',
-          'background-color': element.backgroundColor ?? 'transparent',
           'z-index': element.zIndex
         }">
-        <div class="box"></div>
+        <div
+          aorReiszetContent
+          class="box"
+          [contentHeight]="element.size.height"
+          [contentWidth]="element.size.width"
+          [contentRotation]="element.rotation"
+          [ngStyle]="{
+            'background-color': element.backgroundColor,
+            'border-radius': element.borderRadius + '%'
+          }"></div>
       </aor-map-object>
     }
   </div>

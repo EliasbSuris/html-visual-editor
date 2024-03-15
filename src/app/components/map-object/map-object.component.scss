@@ -1,33 +1,36 @@
 :host {
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
+  padding: 2px;
 
   .handle {
     display: none;
-    background-color: Black;
-    height: 10px;
+    background-color: black;
     position: absolute;
-    width: 12px;
+    width: 10%;
+    height: 10%;
 
     &.se {
       bottom: 0;
-      clip-path: circle(45%);
+      clip-path: polygon(0% 100%, 100% 100%, 100% 0%);
       cursor: se-resize;
       right: 0;
     }
 
     &.s {
       bottom: 0;
-      clip-path: circle(45%);
+      clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
       cursor: s-resize;
       right: 50%;
     }
 
     &.e {
-      cursor: e-resize;
-      clip-path: circle(45%);
-      right: 0;
       bottom: 50%;
+      cursor: e-resize;
+      clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+      right: 0;
     }
   }
 

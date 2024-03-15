@@ -1,4 +1,6 @@
-<ng-content></ng-content>
-<diV class="handle se" (mousedown)="initDrag($event, 'SE')"></diV>
-<diV class="handle s" (mousedown)="initDrag($event, 'S')"></diV>
-<diV class="handle e" (mousedown)="initDrag($event, 'E')"></diV>
+<div class="resize-content">
+  <ng-content></ng-content>
+</div>
+<div class="handle se" aorResizeHandle resizeAction="SE"></div>
+<div class="handle s" aorResizeHandle resizeAction="S"></div>
+<div class="handle e" aorResizeHandle resizeAction="E"></div>

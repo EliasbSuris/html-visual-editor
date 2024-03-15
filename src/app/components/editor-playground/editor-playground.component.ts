@@ -1,36 +1,29 @@
 import { CdkDrag, CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
-import { JsonPipe, NgClass, NgStyle } from '@angular/common';
-import { Component, ElementRef, OnInit, Renderer2, ViewChild, inject } from '@angular/core';
+import { NgClass, NgStyle } from '@angular/common';
+import { Component, ElementRef, NgZone, OnInit, ViewChild, inject } from '@angular/core';
 import { MapObjectComponent } from '@components/map-object/map-object.component';
+import { MapObject } from '@models/map-object.interface';
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom';
-
-interface Point {
-  x: number;
-  y: number;
-}
-
-interface MapObject {
-  id: string;
-  position: Point;
-  size: { width: number; height: number };
-  backgroundColor?: string;
-  borderColor?: string;
-  borderWidth?: number;
-  borderStyle?: 'solid' | 'dotted' | 'dashed';
-  borderRadius?: number;
-  zIndex?: number;
-  text?: string;
-  fontSize?: number;
-  fontColor?: string;
-  adjustPosition: Point;
-  rotation?: number;
-  keepRatio: boolean;
-}
+import { ResizeContainerDirective } from '../../directives/resize-container.directive';
+import { ResizeContentDirective } from '../../directives/resize-content.directive';
+import { ResizeElementDirective } from '../../directives/resize-element.directive';
+import { ResizeContainerHeightPipe } from '../../pipes/resize-container-height.pipe';
+import { ResizeContainerWidthPipe } from '../../pipes/resize-container-width.pipe';
 
 @Component({
   selector: 'aor-editor-playground',
   standalone: true,
-  imports: [NgStyle, NgClass, CdkDrag, MapObjectComponent, JsonPipe],
+  imports: [
+    NgStyle,
+    NgClass,
+    CdkDrag,
+    MapObjectComponent,
+    ResizeContainerDirective,
+    ResizeElementDirective,
+    ResizeContentDirective,
+    ResizeContainerHeightPipe,
+    ResizeContainerWidthPipe,
+  ],
   templateUrl: './editor-playground.component.html',
   styleUrl: './editor-playground.component.scss',
 })
@@ -53,6 +46,15 @@ export class EditorPlaygroundComponent implements OnInit {
       fontColor: 'white',
       rotation: 45,
       keepRatio: false,
+      borderOpacity: 1,
+      borderType: 'solid',
+      fillColor: 'red',
+      fillOpacity: 1,
+      fontType: 'monospace',
+      imageUrl: '',
+      textColor: 'red',
+      textOpacity: 1,
+      type: 'rectangle',
     },
     {
       id: '2',
@@ -62,12 +64,22 @@ export class EditorPlaygroundComponent implements OnInit {
       backgroundColor: 'green',
       borderColor: 'black',
       borderWidth: 2,
-      borderRadius: 10,
+      borderRadius: 0,
       zIndex: 2,
       text: '2',
       fontSize: 16,
       fontColor: 'white',
+      rotation: 0,
       keepRatio: false,
+      borderOpacity: 1,
+      borderType: 'solid',
+      fillColor: 'red',
+      fillOpacity: 1,
+      fontType: 'monospace',
+      imageUrl: '',
+      textColor: 'red',
+      textOpacity: 1,
+      type: 'rectangle',
     },
     {
       id: '3',
@@ -77,12 +89,22 @@ export class EditorPlaygroundComponent implements OnInit {
       backgroundColor: 'blue',
       borderColor: 'black',
       borderWidth: 2,
-      borderRadius: 10,
+      borderRadius: 50,
       zIndex: 1,
       text: '3',
       fontSize: 16,
       fontColor: 'white',
+      rotation: 0,
       keepRatio: true,
+      borderOpacity: 1,
+      borderType: 'solid',
+      fillColor: 'red',
+      fillOpacity: 1,
+      fontType: 'monospace',
+      imageUrl: '',
+      textColor: 'red',
+      textOpacity: 1,
+      type: 'rectangle',
     },
   ];
 
@@ -96,17 +118,20 @@ export class EditorPlaygroundComponent implements OnInit {
   panZoom!: PanzoomObject;
   selectedElementId: string | null = null;
 
+  private zone = inject(NgZone);
+
   ngOnInit(): void {
-    this.panZoom = Panzoom(this.map.nativeElement, {
-      maxScale: 5,
-      minScale: 0.5,
-      canvas: true,
-      excludeClass: 'ls-map-object',
-      contain: 'outside',
+    this.zone.runOutsideAngular(() => {
+      this.panZoom = Panzoom(this.map.nativeElement, {
+        maxScale: 5,
+        minScale: 0.5,
+        canvas: true,
+        excludeClass: 'ls-map-object',
+        contain: 'outside',
+      });
+      this.panZoom.pan(0, 0);
+      this.panZoom.zoom(1, { animate: true });
     });
-    console.log(this.panZoom);
-    this.panZoom.pan(0, 0);
-    this.panZoom.zoom(1, { animate: true });
   }
 
   onDragMapObject(event: CdkDragMove<any>, mapObject: MapObject): void {
@@ -120,7 +145,7 @@ export class EditorPlaygroundComponent implements OnInit {
 
     // Aplica la transformación al elemento basándote en la posición ajustada acumulada
     const element = event.source.element.nativeElement;
-    element.style.transform = `translate(${mapObject.adjustPosition.x}px, ${mapObject.adjustPosition.y}px) rotate(${mapObject.rotation || 0}deg)`;
+    element.style.transform = `translate(${mapObject.adjustPosition.x}px, ${mapObject.adjustPosition.y}px)`;
   }
 
   onDragStartMapObject(event: CdkDragStart, mapObject: MapObject): void {
@@ -136,6 +161,10 @@ export class EditorPlaygroundComponent implements OnInit {
 
   selectElement(elementId: string): void {
     this.selectedElementId = elementId;
+  }
+
+  unSelectElement(): void {
+    this.selectedElementId = null;
   }
 
   isElementSelected(elementId: string): boolean {

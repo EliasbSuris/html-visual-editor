@@ -22,7 +22,9 @@
     "lib": ["ES2022", "dom"],
     "paths": {
       "@custom-types/*": ["./src/app/types/*"],
-      "@components/*": ["./src/app/components/*"]
+      "@components/*": ["./src/app/components/*"],
+      "@models/*": ["./src/app/models/*"],
+      "@directives/*": ["./src/app/directives/*"]
     }
   },
   "angularCompilerOptions": {
