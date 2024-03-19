@@ -1,54 +1,26 @@
 export interface MapObject {
-  id: string;
-
-  type: 'circle' | 'rectangle' | 'polygon' | 'svg' | 'component';
-
-  svg?: string;
-
-  position: {
-    x: number;
-
-    y: number;
-  };
-  imageUrl: string; // dudo si pasarla en Base64 para no dependencias externas
-  fillColor: string;
-
-  fillOpacity: number;
-
-  borderColor: string;
-
-  // borderThickness: number;
-
-  borderType: 'solid' | 'dotted' | 'dashed';
-
-  borderOpacity: number;
-
-  text: string;
-
-  textColor: string;
-
-  textOpacity: number;
-
-  fontSize: number;
-
-  fontType: 'sans-serif' | 'serif' | 'monospace';
-
-  rotation: number;
-
-  // added
+  adjustPosition: { x: number; y: number };
   backgroundColor: string;
-  adjustPosition: {
-    x: number;
-
-    y: number;
-  };
-  size: {
-    height: number;
-    width: number;
-  };
-  borderWidth: number;
+  borderColor: string;
+  borderOpacity: number;
   borderRadius: number;
-  zIndex: number;
+  borderType: 'solid' | 'dotted' | 'dashed';
+  borderWidth: number;
+  fillColor: string;
+  fillOpacity: number;
   fontColor: string;
+  fontSize: number;
+  fontType: 'sans-serif' | 'serif' | 'monospace';
+  id: string;
+  imageUrl: string;
   keepRatio: boolean;
+  position: { x: number; y: number };
+  rotation: number;
+  size: { height: number; width: number };
+  svg?: string;
+  text: string;
+  textColor: string;
+  textOpacity: number;
+  type: 'circle' | 'rectangle' | 'polygon' | 'svg' | 'component';
+  zIndex: number;
 }

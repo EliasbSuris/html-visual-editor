@@ -1,5 +1,20 @@
-<div class="ls-visor" #visor (wheel)="zoom($event)" (dblclick)="unSelectElement()" aorResizeContainer>
-  <div id="map" class="ls-map" #map>
+<div
+  class="ls-visor"
+  #visor
+  (dblclick)="unSelectElement()"
+  aorPanZoomVisor
+  [panZoomCanvas]="map"
+  [options]="visorOptions"
+  [visorMaxWidth]="canvasOptions.width"
+  (zoomLevelChanged)="updateZoomLevel($event)">
+  <div
+    id="map"
+    class="canvas"
+    #map
+    aorResizeContainer
+    aorPanZoomCanvas
+    [canvasHeight]="canvasOptions.height"
+    [canvasWidth]="canvasOptions.width">
     @for (element of mapObjects; track $index) {
       <aor-map-object
         aorResizeElement
@@ -11,8 +26,8 @@
         (click)="selectElement(element.id); $event.stopPropagation()"
         (cdkDragMoved)="onDragMapObject($event, element)"
         (cdkDragStarted)="onDragStartMapObject($event, element)"
-        cdkDragBoundary=".ls-map"
-        class="ls-map-object"
+        cdkDragBoundary=".canvas"
+        class="panzoom-exclude"
         [ngClass]="{ selected: isElementSelected(element.id) }"
         [ngStyle]="{
           transform: 'translate(' + element.position.x + 'px, ' + element.position.y + 'px)',

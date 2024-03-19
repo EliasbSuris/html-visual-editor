@@ -1,14 +1,19 @@
 import { CdkDrag, CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
 import { NgClass, NgStyle } from '@angular/common';
-import { Component, ElementRef, NgZone, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, Input, NgZone, ViewChild, inject } from '@angular/core';
 import { MapObjectComponent } from '@components/map-object/map-object.component';
+import { PanZoomVisorDirective } from '@directives/pan-zoom-visor.directive';
+import { ResizeContainerDirective } from '@directives/resize-container.directive';
+import { ResizeContentDirective } from '@directives/resize-content.directive';
+import { ResizeElementDirective } from '@directives/resize-element.directive';
 import { MapObject } from '@models/map-object.interface';
-import Panzoom, { PanzoomObject } from '@panzoom/panzoom';
-import { ResizeContainerDirective } from '../../directives/resize-container.directive';
-import { ResizeContentDirective } from '../../directives/resize-content.directive';
-import { ResizeElementDirective } from '../../directives/resize-element.directive';
-import { ResizeContainerHeightPipe } from '../../pipes/resize-container-height.pipe';
-import { ResizeContainerWidthPipe } from '../../pipes/resize-container-width.pipe';
+import { PanzoomObject } from '@panzoom/panzoom';
+import { ResizeContainerHeightPipe } from '@pipes/resize-container-height.pipe';
+import { ResizeContainerWidthPipe } from '@pipes/resize-container-width.pipe';
+import { MAP_OBJECTS } from './mock-data';
+import { PanZoomCanvasDirective } from '@directives/pan-zoom-canvas.directive';
+import { CanvasOptions } from '@models/canvas-options';
+import { VisorOptions } from '@models/visor-options';
 
 @Component({
   selector: 'aor-editor-playground',
@@ -21,92 +26,23 @@ import { ResizeContainerWidthPipe } from '../../pipes/resize-container-width.pip
     ResizeContainerDirective,
     ResizeElementDirective,
     ResizeContentDirective,
+    PanZoomVisorDirective,
+    PanZoomCanvasDirective,
     ResizeContainerHeightPipe,
     ResizeContainerWidthPipe,
   ],
   templateUrl: './editor-playground.component.html',
   styleUrl: './editor-playground.component.scss',
 })
-export class EditorPlaygroundComponent implements OnInit {
+export class EditorPlaygroundComponent {
+  @Input()
+  canvasOptions!: CanvasOptions;
+  @Input()
+  visorOptions!: VisorOptions;
+
   @ViewChild('map', { static: true }) map!: ElementRef;
 
-  mapObjects: MapObject[] = [
-    {
-      id: '1',
-      position: { x: 100, y: 100 },
-      adjustPosition: { x: 100, y: 100 },
-      size: { width: 100, height: 100 },
-      backgroundColor: 'red',
-      borderColor: 'black',
-      borderWidth: 2,
-      borderRadius: 10,
-      zIndex: 3,
-      text: '1',
-      fontSize: 16,
-      fontColor: 'white',
-      rotation: 45,
-      keepRatio: false,
-      borderOpacity: 1,
-      borderType: 'solid',
-      fillColor: 'red',
-      fillOpacity: 1,
-      fontType: 'monospace',
-      imageUrl: '',
-      textColor: 'red',
-      textOpacity: 1,
-      type: 'rectangle',
-    },
-    {
-      id: '2',
-      position: { x: 300, y: 300 },
-      adjustPosition: { x: 300, y: 300 },
-      size: { width: 200, height: 100 },
-      backgroundColor: 'green',
-      borderColor: 'black',
-      borderWidth: 2,
-      borderRadius: 0,
-      zIndex: 2,
-      text: '2',
-      fontSize: 16,
-      fontColor: 'white',
-      rotation: 0,
-      keepRatio: false,
-      borderOpacity: 1,
-      borderType: 'solid',
-      fillColor: 'red',
-      fillOpacity: 1,
-      fontType: 'monospace',
-      imageUrl: '',
-      textColor: 'red',
-      textOpacity: 1,
-      type: 'rectangle',
-    },
-    {
-      id: '3',
-      position: { x: 500, y: 500 },
-      adjustPosition: { x: 500, y: 500 },
-      size: { width: 100, height: 100 },
-      backgroundColor: 'blue',
-      borderColor: 'black',
-      borderWidth: 2,
-      borderRadius: 50,
-      zIndex: 1,
-      text: '3',
-      fontSize: 16,
-      fontColor: 'white',
-      rotation: 0,
-      keepRatio: true,
-      borderOpacity: 1,
-      borderType: 'solid',
-      fillColor: 'red',
-      fillOpacity: 1,
-      fontType: 'monospace',
-      imageUrl: '',
-      textColor: 'red',
-      textOpacity: 1,
-      type: 'rectangle',
-    },
-  ];
+  mapObjects: MapObject[] = MAP_OBJECTS;
 
   zoomLevel = 1;
   zoomOrigin = { x: 0, y: 0 };
@@ -119,20 +55,6 @@ export class EditorPlaygroundComponent implements OnInit {
   selectedElementId: string | null = null;
 
   private zone = inject(NgZone);
-
-  ngOnInit(): void {
-    this.zone.runOutsideAngular(() => {
-      this.panZoom = Panzoom(this.map.nativeElement, {
-        maxScale: 5,
-        minScale: 0.5,
-        canvas: true,
-        excludeClass: 'ls-map-object',
-        contain: 'outside',
-      });
-      this.panZoom.pan(0, 0);
-      this.panZoom.zoom(1, { animate: true });
-    });
-  }
 
   onDragMapObject(event: CdkDragMove<any>, mapObject: MapObject): void {
     // Calcula la distancia movida ajustada por el nivel de zoom
@@ -154,9 +76,8 @@ export class EditorPlaygroundComponent implements OnInit {
     mapObject.position.y = mapObject.adjustPosition.y;
   }
 
-  zoom(event: WheelEvent): void {
-    const zoom = this.panZoom.zoomWithWheel(event);
-    this.zoomLevel = zoom.scale;
+  updateZoomLevel(newZoomLevel: number): void {
+    this.zoomLevel = newZoomLevel;
   }
 
   selectElement(elementId: string): void {
