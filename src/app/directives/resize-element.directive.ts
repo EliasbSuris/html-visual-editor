@@ -1,4 +1,4 @@
-import { ContentChild, Directive, HostBinding, Input, NgZone, inject } from '@angular/core';
+import { ContentChild, Directive, EventEmitter, HostBinding, Input, NgZone, Output, inject } from '@angular/core';
 import { ObjectValues } from '@custom-types/utils.type';
 import { calculateResizeContainerHeight } from '../pipes/resize-container-height.pipe';
 import { calculateResizeContainerWidth } from '../pipes/resize-container-width.pipe';
@@ -13,11 +13,19 @@ export const RESIZE_ACTION = {
 
 export type ResizeAction = ObjectValues<typeof RESIZE_ACTION>;
 
+export interface ResizeEvent<T> {
+  data: T;
+  size: {
+    width: number;
+    height: number;
+  };
+}
+
 @Directive({
   selector: '[aorResizeElement]',
   standalone: true,
 })
-export class ResizeElementDirective {
+export class ResizeElementDirective<T> {
   @Input()
   @HostBinding('style.height.px')
   containerHeight = 100;
@@ -30,6 +38,10 @@ export class ResizeElementDirective {
   minSize = 20;
   @Input()
   zoomLevel = 1;
+  @Input()
+  resizeData!: T;
+  @Output()
+  elementResized = new EventEmitter<ResizeEvent<T>>();
 
   @ContentChild(ResizeContentDirective)
   contentDirective!: ResizeContentDirective;
@@ -53,6 +65,13 @@ export class ResizeElementDirective {
   doResize(event: MouseEvent): void {
     this.zone.run(() => {
       this.resizeObject(event);
+    });
+  }
+
+  elementResizeEnded(): void {
+    this.elementResized.next({
+      data: this.resizeData,
+      size: { height: this.contentDirective.contentHeight, width: this.contentDirective.contentWidth },
     });
   }
 

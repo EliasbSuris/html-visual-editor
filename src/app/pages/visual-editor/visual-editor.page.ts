@@ -1,20 +1,25 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput, MatLabel } from '@angular/material/input';
 import { EditorPlaygroundComponent } from '@components/editor-playground/editor-playground.component';
+import { MAP_OBJECTS } from '@components/editor-playground/mock-data';
 import { DEFAULT_EXCLUDE_CLASS } from '@directives/pan-zoom-visor.directive';
 import { CanvasOptions } from '@models/canvas-options';
+import { MapObject } from '@models/map-object.interface';
 import { VisorOptions } from '@models/visor-options';
 
 @Component({
   selector: 'page-visual-editor',
   standalone: true,
-  imports: [EditorPlaygroundComponent],
+  imports: [EditorPlaygroundComponent, MatFormField, MatInput, MatLabel, FormsModule],
   templateUrl: './visual-editor.page.html',
   styleUrl: './visual-editor.page.scss',
 })
 export class VisualEditorPage {
   canvasOptions: CanvasOptions = {
-    height: 1000,
-    width: 1000,
+    height: 3000,
+    width: 3000,
   };
   visorOptions: VisorOptions = {
     disablePan: false,
@@ -22,8 +27,27 @@ export class VisualEditorPage {
     excludeClass: DEFAULT_EXCLUDE_CLASS,
     initialPan: { x: -100, y: -100 },
     initialZoom: 1,
-    maxZoom: 10,
+    maxZoom: 5,
     minZoom: 0.1,
     zoomFactor: 0.5,
   };
+
+  elements = MAP_OBJECTS;
+
+  onChangeCanvasOptions(key: keyof CanvasOptions, value: number): void {
+    this.canvasOptions = { ...this.canvasOptions, [key]: value };
+  }
+
+  onElementMoved(movedElement: MapObject): void {
+    // TODO: avoid mutation on drag & drop?
+    const element = this.elements.find(element => element.id === movedElement.id);
+    console.log('ELEMENT MOVED FROM', element);
+    console.log('ELEMENT MOVED TO', movedElement);
+  }
+
+  onElementResized(resizedElement: MapObject): void {
+    const element = this.elements.find(element => element.id === resizedElement.id);
+    console.log('ELEMENT SIZE BEFORE RESIZE', element);
+    console.log('ELEMENT SIZE AFTER RESIZE', resizedElement);
+  }
 }

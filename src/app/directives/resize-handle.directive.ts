@@ -88,6 +88,7 @@ export class ResizeHandleDirective implements OnInit, OnDestroy {
   }
 
   private onMouseUp(): void {
+    this.resizeElementDirective.elementResizeEnded();
     Object.keys(this.eventListeners).forEach(type => {
       const listener = type as EventListener;
       this.eventListeners[listener]?.();

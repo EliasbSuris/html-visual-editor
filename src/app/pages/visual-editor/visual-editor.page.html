@@ -1,3 +1,32 @@
+<form class="canvas-form">
+  <mat-form-field appearance="outline">
+    <mat-label>Canvas Width</mat-label>
+    <input
+      matInput
+      type="number"
+      name="canvas-width"
+      placeholder="Width in px"
+      [ngModel]="canvasOptions.width"
+      (ngModelChange)="onChangeCanvasOptions('width', $event)" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Canvas Height</mat-label>
+    <input
+      matInput
+      type="number"
+      name="canvas-height"
+      placeholder="Height in px"
+      [ngModel]="canvasOptions.height"
+      (ngModelChange)="onChangeCanvasOptions('height', $event)" />
+  </mat-form-field>
+</form>
 <div class="map-container">
-  <aor-editor-playground [canvasOptions]="canvasOptions" [visorOptions]="visorOptions"> </aor-editor-playground>
+  <aor-editor-playground
+    [mapObjects]="elements"
+    [canvasOptions]="canvasOptions"
+    [visorOptions]="visorOptions"
+    (elementResized)="onElementResized($event)"
+    (elementMoved)="onElementMoved($event)">
+  </aor-editor-playground>
 </div>

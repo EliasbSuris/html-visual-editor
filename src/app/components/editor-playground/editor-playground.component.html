@@ -1,7 +1,11 @@
+<div class="action-buttons">
+  <button mat-raised-button color="primary" (click)="resetPanzoom()">Reset</button>
+</div>
 <div
   class="ls-visor"
   #visor
   (dblclick)="unSelectElement()"
+  [cdkContextMenuTriggerFor]="panzoomOptions"
   aorPanZoomVisor
   [panZoomCanvas]="map"
   [options]="visorOptions"
@@ -17,17 +21,20 @@
     [canvasWidth]="canvasOptions.width">
     @for (element of mapObjects; track $index) {
       <aor-map-object
+        class="panzoom-exclude"
         aorResizeElement
-        cdkDrag
         [containerHeight]="element | resizeContainerHeight"
         [containerWidth]="element | resizeContainerWidth"
         [keepRatio]="element.keepRatio"
         [zoomLevel]="zoomLevel"
-        (click)="selectElement(element.id); $event.stopPropagation()"
-        (cdkDragMoved)="onDragMapObject($event, element)"
-        (cdkDragStarted)="onDragStartMapObject($event, element)"
+        [resizeData]="element"
+        (elementResized)="onElementResized($event)"
+        cdkDrag
+        (cdkDragMoved)="onDragMapObject($event)"
+        (cdkDragEnded)="onDragEnd($event)"
+        [cdkDragData]="element"
         cdkDragBoundary=".canvas"
-        class="panzoom-exclude"
+        (click)="selectElement(element.id); $event.stopPropagation()"
         [ngClass]="{ selected: isElementSelected(element.id) }"
         [ngStyle]="{
           transform: 'translate(' + element.position.x + 'px, ' + element.position.y + 'px)',
@@ -40,11 +47,21 @@
           [contentHeight]="element.size.height"
           [contentWidth]="element.size.width"
           [contentRotation]="element.rotation"
+          [innerHTML]="element | elementToSvg"
           [ngStyle]="{
             'background-color': element.backgroundColor,
+            'background-image': 'url(' + element.imageUrl + ')',
+            'background-size': 'contain',
+            'background-repeat': 'no-repeat',
             'border-radius': element.borderRadius + '%'
           }"></div>
       </aor-map-object>
     }
   </div>
 </div>
+
+<ng-template #panzoomOptions>
+  <div class="example-menu" cdkMenu>
+    <button mat-raised-button color="primary" cdkMenuItem (click)="resetPanzoom()">Reset</button>
+  </div>
+</ng-template>

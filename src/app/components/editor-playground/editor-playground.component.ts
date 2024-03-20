@@ -1,19 +1,21 @@
-import { CdkDrag, CdkDragMove, CdkDragStart } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
+import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 import { NgClass, NgStyle } from '@angular/common';
-import { Component, ElementRef, Input, NgZone, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, NgZone, Output, ViewChild, inject } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MapObjectComponent } from '@components/map-object/map-object.component';
+import { PanZoomCanvasDirective } from '@directives/pan-zoom-canvas.directive';
 import { PanZoomVisorDirective } from '@directives/pan-zoom-visor.directive';
 import { ResizeContainerDirective } from '@directives/resize-container.directive';
 import { ResizeContentDirective } from '@directives/resize-content.directive';
-import { ResizeElementDirective } from '@directives/resize-element.directive';
+import { ResizeElementDirective, ResizeEvent } from '@directives/resize-element.directive';
+import { CanvasOptions } from '@models/canvas-options';
 import { MapObject } from '@models/map-object.interface';
+import { VisorOptions } from '@models/visor-options';
 import { PanzoomObject } from '@panzoom/panzoom';
+import { ElementToSvgPipe } from '@pipes/element-to-svg.pipe';
 import { ResizeContainerHeightPipe } from '@pipes/resize-container-height.pipe';
 import { ResizeContainerWidthPipe } from '@pipes/resize-container-width.pipe';
-import { MAP_OBJECTS } from './mock-data';
-import { PanZoomCanvasDirective } from '@directives/pan-zoom-canvas.directive';
-import { CanvasOptions } from '@models/canvas-options';
-import { VisorOptions } from '@models/visor-options';
 
 @Component({
   selector: 'aor-editor-playground',
@@ -30,6 +32,11 @@ import { VisorOptions } from '@models/visor-options';
     PanZoomCanvasDirective,
     ResizeContainerHeightPipe,
     ResizeContainerWidthPipe,
+    ElementToSvgPipe,
+    MatButton,
+    CdkContextMenuTrigger,
+    CdkMenu,
+    CdkMenuItem,
   ],
   templateUrl: './editor-playground.component.html',
   styleUrl: './editor-playground.component.scss',
@@ -39,10 +46,16 @@ export class EditorPlaygroundComponent {
   canvasOptions!: CanvasOptions;
   @Input()
   visorOptions!: VisorOptions;
+  @Input()
+  mapObjects: MapObject[] = [];
+  @Output()
+  elementMoved = new EventEmitter<MapObject>();
+  @Output()
+  elementResized = new EventEmitter<MapObject>();
 
   @ViewChild('map', { static: true }) map!: ElementRef;
-
-  mapObjects: MapObject[] = MAP_OBJECTS;
+  @ViewChild(PanZoomVisorDirective)
+  private panZoomDirective!: PanZoomVisorDirective;
 
   zoomLevel = 1;
   zoomOrigin = { x: 0, y: 0 };
@@ -56,7 +69,8 @@ export class EditorPlaygroundComponent {
 
   private zone = inject(NgZone);
 
-  onDragMapObject(event: CdkDragMove<any>, mapObject: MapObject): void {
+  onDragMapObject(event: CdkDragMove<MapObject>): void {
+    const mapObject = event.source.data;
     // Calcula la distancia movida ajustada por el nivel de zoom
     const adjustedX = event.distance.x / this.zoomLevel;
     const adjustedY = event.distance.y / this.zoomLevel;
@@ -70,10 +84,15 @@ export class EditorPlaygroundComponent {
     element.style.transform = `translate(${mapObject.adjustPosition.x}px, ${mapObject.adjustPosition.y}px)`;
   }
 
-  onDragStartMapObject(event: CdkDragStart, mapObject: MapObject): void {
-    // Cuando el arrastre termina, actualiza la posición del objeto del mapa con la posición ajustada
+  onDragEnd(event: CdkDragEnd<MapObject>): void {
+    const mapObject = event.source.data;
     mapObject.position.x = mapObject.adjustPosition.x;
     mapObject.position.y = mapObject.adjustPosition.y;
+    this.elementMoved.next(mapObject);
+  }
+
+  onElementResized({ data, size: { height, width } }: ResizeEvent<MapObject>): void {
+    this.elementResized.next({ ...data, size: { height, width } });
   }
 
   updateZoomLevel(newZoomLevel: number): void {
@@ -90,5 +109,9 @@ export class EditorPlaygroundComponent {
 
   isElementSelected(elementId: string): boolean {
     return this.selectedElementId === elementId;
+  }
+
+  resetPanzoom(): void {
+    this.panZoomDirective.reset();
   }
 }

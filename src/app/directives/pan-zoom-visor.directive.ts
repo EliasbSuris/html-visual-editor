@@ -15,6 +15,7 @@ import Panzoom, { PanzoomObject, PanzoomOptions } from '@panzoom/panzoom';
 import { Subject, fromEvent, takeUntil } from 'rxjs';
 
 export const DEFAULT_EXCLUDE_CLASS = 'panzoom-exclude';
+export const VISOR_MAX_WIDTH_LIMIT = 1200;
 
 @Directive({
   selector: '[aorPanZoomVisor]',
@@ -34,23 +35,27 @@ export class PanZoomVisorDirective implements OnInit, OnDestroy {
   };
   @Input()
   panZoomCanvas!: HTMLDivElement;
+  @Input()
+  visorMaxWidth: number = VISOR_MAX_WIDTH_LIMIT;
   @Output()
   zoomLevelChanged = new EventEmitter<number>();
-
-  @Input()
-  @HostBinding('style.max-width.px')
-  visorMaxWidth!: number;
 
   panZoom!: PanzoomObject;
   zoomLevel!: number;
 
   private observer!: ResizeObserver;
   private destroy$ = new Subject<void>();
+  private panZoomOptions!: PanzoomOptions;
 
   constructor(
     @Self() private element: ElementRef,
     private zone: NgZone
   ) {}
+
+  @HostBinding('style.max-width.px')
+  get maxWidth(): number {
+    return this.visorMaxWidth > VISOR_MAX_WIDTH_LIMIT ? VISOR_MAX_WIDTH_LIMIT : this.visorMaxWidth;
+  }
 
   ngOnInit(): void {
     if (!this.panZoomCanvas) {
@@ -58,7 +63,8 @@ export class PanZoomVisorDirective implements OnInit, OnDestroy {
     }
     this.zone.runOutsideAngular(() => {
       this.panZoom = Panzoom(this.panZoomCanvas);
-      this.panZoom.setOptions(this.createPanZoomOptions(this.options));
+      this.panZoomOptions = this.createPanZoomOptions(this.options);
+      this.panZoom.setOptions(this.panZoomOptions);
       this.panZoom.zoom(this.options.initialZoom, { animate: true });
       setTimeout(() => this.panZoom.pan(this.options.initialPan.x, this.options.initialPan.y));
 
@@ -70,6 +76,10 @@ export class PanZoomVisorDirective implements OnInit, OnDestroy {
     this.observer.unobserve(this.element.nativeElement);
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  public reset(): void {
+    this.panZoom.reset();
   }
 
   private subscribeToWheelEvent(): void {
@@ -100,7 +110,10 @@ export class PanZoomVisorDirective implements OnInit, OnDestroy {
       maxScale: options.maxZoom,
       minScale: options.minZoom,
       step: options.zoomFactor,
+      // set
       startScale: options.initialZoom,
+      startX: options.initialPan.x,
+      startY: options.initialPan.y,
     };
   }
 }
