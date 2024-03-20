@@ -80,6 +80,7 @@ export class PanZoomVisorDirective implements OnInit, OnDestroy {
 
   public reset(): void {
     this.panZoom.reset();
+    this.zoomLevelChanged.next(this.panZoom.getScale());
   }
 
   private subscribeToWheelEvent(): void {
