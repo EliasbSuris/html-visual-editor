@@ -1,52 +1,60 @@
-<div class="ls-visor" #visor>
+<div class="action-buttons">
+  <button mat-raised-button color="primary" (click)="resetPanzoom()">Reset</button>
+</div>
+<div
+  class="ls-visor"
+  #visor
+  (dblclick)="unSelectElement()"
+  [cdkContextMenuTriggerFor]="panzoomOptions"
+  aorPanZoomVisor
+  [panZoomCanvas]="map"
+  [options]="visorOptions"
+  [visorMaxWidth]="canvasOptions.width"
+  (zoomLevelChanged)="updateZoomLevel($event)">
   <div
-    id="zoom"
-    class="zoom-container"
-    #zoomContainer
-    [ngStyle]="{
-      width: canvasSize.width,
-      height: canvasSize.height
-    }"
-    (wheel)="adjustZoom($event, zoomContainer)">
-    <div
-      cdkDrag
-      class="ls-map"
-      (cdkDragMoved)="onDrag($event)"
-      (cdkDragEnded)="onDragEnd($event)"
-      (cdkDragStarted)="onDragStart($event)"
-      [ngStyle]="{
-        width: canvasSize.width + 'px',
-        height: canvasSize.height + 'px'
-      }">
-      @for (object of mapObjects; track $index) {
-        <app-map-object
-          cdkDrag
-          (cdkDragMoved)="onDragMapObject($event, object)"
-          (cdkDragStarted)="onDragStartMapObject($event, object)"
-          cdkDragBoundary=".ls-map"
-          class="ls-map-object"
-          [ngStyle]="{
-            transform:
-              'translate(' +
-              object.position.x +
-              'px, ' +
-              object.position.y +
-              'px) rotate(' +
-              (object.rotation ?? 0) +
-              'deg)',
-            'transform-origin': 'center',
-            width: object.size.width + 'px',
-            height: object.size.height + 'px' || '100px',
-            'background-color': object.backgroundColor ?? 'transparent',
-            'border-style': object.borderStyle ?? 'none',
-            'border-color': object.borderColor ?? 'transparent',
-            'border-width': object.borderWidth ?? '0px',
-            'border-radius': object.borderRadius ?? '0px'
-          }">
-          <div class="box"></div>
-        </app-map-object>
-      }
-    </div>
+    id="map"
+    class="canvas"
+    #map
+    aorResizeContainer
+    aorPanZoomCanvas
+    [canvasHeight]="canvasOptions.height"
+    [canvasWidth]="canvasOptions.width">
+    @for (element of mapObjects; track $index) {
+      <aor-element-container
+        class="panzoom-exclude"
+        aorResizeElement
+        [containerHeight]="element | resizeContainerHeight"
+        [containerWidth]="element | resizeContainerWidth"
+        [keepRatio]="element.keepRatio"
+        [zoomLevel]="zoomLevel"
+        [resizeData]="element"
+        (elementResized)="onElementResized($event)"
+        cdkDrag
+        (cdkDragMoved)="onDragMapObject($event)"
+        (cdkDragEnded)="onDragEnd($event)"
+        [cdkDragData]="element"
+        cdkDragBoundary=".canvas"
+        (click)="selectElement(element.id); $event.stopPropagation()"
+        [ngClass]="{ selected: isElementSelected(element.id) }"
+        [ngStyle]="{
+          transform: 'translate(' + element.position.x + 'px, ' + element.position.y + 'px)',
+          'transform-origin': 'center',
+          'z-index': element.zIndex
+        }">
+        <aor-element-content
+          [element]="element"
+          aorReiszetContent
+          [contentHeight]="element.size.height"
+          [contentWidth]="element.size.width"
+          [contentRotation]="element.rotation">
+        </aor-element-content>
+      </aor-element-container>
+    }
   </div>
 </div>
-<ng-content> </ng-content>
+
+<ng-template #panzoomOptions>
+  <div class="example-menu" cdkMenu>
+    <button mat-raised-button color="primary" cdkMenuItem (click)="resetPanzoom()">Reset</button>
+  </div>
+</ng-template>
