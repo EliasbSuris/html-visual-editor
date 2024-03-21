@@ -3,6 +3,7 @@ import { ObjectValues } from '@custom-types/utils.type';
 export const ELEMENT_TYPE = {
   SIMPLE: 'simple',
   SVG: 'svg',
+  SOLID_GAUGE: 'solid_gauge',
 } as const;
 
 export type ElementType = ObjectValues<typeof ELEMENT_TYPE>;
