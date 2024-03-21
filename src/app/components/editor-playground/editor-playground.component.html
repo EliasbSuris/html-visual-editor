@@ -20,7 +20,7 @@
     [canvasHeight]="canvasOptions.height"
     [canvasWidth]="canvasOptions.width">
     @for (element of mapObjects; track $index) {
-      <aor-map-object
+      <aor-element-container
         class="panzoom-exclude"
         aorResizeElement
         [containerHeight]="element | resizeContainerHeight"
@@ -41,21 +41,14 @@
           'transform-origin': 'center',
           'z-index': element.zIndex
         }">
-        <div
+        <aor-element-content
+          [element]="element"
           aorReiszetContent
-          class="box"
           [contentHeight]="element.size.height"
           [contentWidth]="element.size.width"
-          [contentRotation]="element.rotation"
-          [innerHTML]="element | elementToSvg"
-          [ngStyle]="{
-            'background-color': element.backgroundColor,
-            'background-image': 'url(' + element.imageUrl + ')',
-            'background-size': 'contain',
-            'background-repeat': 'no-repeat',
-            'border-radius': element.borderRadius + '%'
-          }"></div>
-      </aor-map-object>
+          [contentRotation]="element.rotation">
+        </aor-element-content>
+      </aor-element-container>
     }
   </div>
 </div>

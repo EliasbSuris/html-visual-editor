@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CONTAINER_OFFSET } from '@components/map-object/map-object.component';
+import { CONTAINER_OFFSET } from '@components/element-container/element-container.component';
 import { MapObject } from '@models/map-object.interface';
 
 @Pipe({

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, Input, inject } from '@angular/core';
+import { Directive, HostBinding, Input } from '@angular/core';
 
 @Directive({
   selector: '[aorReiszetContent]',
@@ -16,6 +16,4 @@ export class ResizeContentDirective {
   @Input()
   @HostBinding('style.rotate.deg')
   contentRotation!: number;
-
-  private elementRef: ElementRef<Element> = inject(ElementRef);
 }

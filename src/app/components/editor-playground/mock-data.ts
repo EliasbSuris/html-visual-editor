@@ -24,7 +24,7 @@ export const MAP_OBJECTS: MapObject[] = [
     imageUrl: '',
     textColor: 'red',
     textOpacity: 1,
-    type: 'rectangle',
+    type: 'simple',
   },
   {
     id: '2',
@@ -49,7 +49,7 @@ export const MAP_OBJECTS: MapObject[] = [
     imageUrl: '',
     textColor: 'red',
     textOpacity: 1,
-    type: 'rectangle',
+    type: 'simple',
   },
   {
     id: '3',
@@ -74,7 +74,7 @@ export const MAP_OBJECTS: MapObject[] = [
     imageUrl: '',
     textColor: 'red',
     textOpacity: 1,
-    type: 'circle',
+    type: 'simple',
   },
   {
     id: '4',
@@ -99,7 +99,7 @@ export const MAP_OBJECTS: MapObject[] = [
     imageUrl: 'https://img-9gag-fun.9cache.com/photo/aN0gO46_460s.jpg',
     textColor: 'red',
     textOpacity: 1,
-    type: 'rectangle',
+    type: 'simple',
   },
   {
     id: '5',

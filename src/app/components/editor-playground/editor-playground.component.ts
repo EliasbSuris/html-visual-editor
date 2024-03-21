@@ -3,7 +3,8 @@ import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 import { NgClass, NgStyle } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, NgZone, Output, ViewChild, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { MapObjectComponent } from '@components/map-object/map-object.component';
+import { ElementContainerComponent } from '@components/element-container/element-container.component';
+import { ElementContentComponent } from '@components/element-content/element-content.component';
 import { PanZoomCanvasDirective } from '@directives/pan-zoom-canvas.directive';
 import { PanZoomVisorDirective } from '@directives/pan-zoom-visor.directive';
 import { ResizeContainerDirective } from '@directives/resize-container.directive';
@@ -13,7 +14,6 @@ import { CanvasOptions } from '@models/canvas-options';
 import { MapObject } from '@models/map-object.interface';
 import { VisorOptions } from '@models/visor-options';
 import { PanzoomObject } from '@panzoom/panzoom';
-import { ElementToSvgPipe } from '@pipes/element-to-svg.pipe';
 import { ResizeContainerHeightPipe } from '@pipes/resize-container-height.pipe';
 import { ResizeContainerWidthPipe } from '@pipes/resize-container-width.pipe';
 
@@ -24,7 +24,8 @@ import { ResizeContainerWidthPipe } from '@pipes/resize-container-width.pipe';
     NgStyle,
     NgClass,
     CdkDrag,
-    MapObjectComponent,
+    ElementContainerComponent,
+    ElementContentComponent,
     ResizeContainerDirective,
     ResizeElementDirective,
     ResizeContentDirective,
@@ -32,7 +33,6 @@ import { ResizeContainerWidthPipe } from '@pipes/resize-container-width.pipe';
     PanZoomCanvasDirective,
     ResizeContainerHeightPipe,
     ResizeContainerWidthPipe,
-    ElementToSvgPipe,
     MatButton,
     CdkContextMenuTrigger,
     CdkMenu,

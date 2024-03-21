@@ -1,3 +1,12 @@
+import { ObjectValues } from '@custom-types/utils.type';
+
+export const ELEMENT_TYPE = {
+  SIMPLE: 'simple',
+  SVG: 'svg',
+} as const;
+
+export type ElementType = ObjectValues<typeof ELEMENT_TYPE>;
+
 export interface MapObject {
   adjustPosition: { x: number; y: number };
   backgroundColor: string;
@@ -21,6 +30,6 @@ export interface MapObject {
   text: string;
   textColor: string;
   textOpacity: number;
-  type: 'circle' | 'rectangle' | 'polygon' | 'svg' | 'component';
+  type: ElementType;
   zIndex: number;
 }
