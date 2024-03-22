@@ -18,7 +18,8 @@
     aorResizeContainer
     aorPanZoomCanvas
     [canvasHeight]="canvasOptions.height"
-    [canvasWidth]="canvasOptions.width">
+    [canvasWidth]="canvasOptions.width"
+    [canvasBackgroundColor]="canvasOptions.backgroundColor">
     @for (element of mapObjects; track $index) {
       <aor-element-container
         class="panzoom-exclude"

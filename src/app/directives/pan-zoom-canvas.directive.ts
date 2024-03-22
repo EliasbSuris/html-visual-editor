@@ -12,4 +12,8 @@ export class PanZoomCanvasDirective {
   @Input()
   @HostBinding('style.width.px')
   canvasWidth!: number;
+
+  @Input()
+  @HostBinding('style.backgroundColor')
+  canvasBackgroundColor!: string;
 }

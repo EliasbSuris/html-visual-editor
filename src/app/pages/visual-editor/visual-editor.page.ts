@@ -20,6 +20,7 @@ export class VisualEditorPage {
   canvasOptions: CanvasOptions = {
     height: 3000,
     width: 3000,
+    backgroundColor: 'rgb(68, 140, 198)',
   };
   visorOptions: VisorOptions = {
     disablePan: false,
