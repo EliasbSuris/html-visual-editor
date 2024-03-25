@@ -20,7 +20,7 @@
     [canvasHeight]="canvasOptions.height"
     [canvasWidth]="canvasOptions.width"
     [canvasBackgroundColor]="canvasOptions.backgroundColor">
-    @for (element of mapObjects; track $index) {
+    @for (element of mapObjects; track element.id) {
       <aor-element-container
         class="panzoom-exclude"
         aorResizeElement
@@ -36,6 +36,7 @@
         [cdkDragData]="element"
         cdkDragBoundary=".canvas"
         (click)="selectElement(element.id); $event.stopPropagation()"
+        [text]="element.text"
         [ngClass]="{ selected: isElementSelected(element.id) }"
         [ngStyle]="{
           transform: 'translate(' + element.position.x + 'px, ' + element.position.y + 'px)',
@@ -53,6 +54,7 @@
     }
   </div>
 </div>
+<span>{{ cdFired() }}</span>
 
 <ng-template #panzoomOptions>
   <div class="example-menu" cdkMenu>

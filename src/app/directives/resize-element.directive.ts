@@ -1,4 +1,14 @@
-import { ContentChild, Directive, EventEmitter, HostBinding, Input, NgZone, Output, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  ContentChild,
+  Directive,
+  EventEmitter,
+  HostBinding,
+  Input,
+  NgZone,
+  Output,
+  inject,
+} from '@angular/core';
 import { ObjectValues } from '@custom-types/utils.type';
 import { calculateResizeContainerHeight } from '../pipes/resize-container-height.pipe';
 import { calculateResizeContainerWidth } from '../pipes/resize-container-width.pipe';
@@ -54,6 +64,8 @@ export class ResizeElementDirective<T> {
 
   private currentResizeDirection: ResizeAction = 'NONE';
 
+  constructor(private readonly cdr: ChangeDetectorRef) {}
+
   initResize(event: MouseEvent, resizeAction: ResizeAction): void {
     this.currentResizeDirection = resizeAction;
     this.coords.x = event.clientX;
@@ -65,11 +77,12 @@ export class ResizeElementDirective<T> {
   doResize(event: MouseEvent): void {
     this.zone.run(() => {
       this.resizeObject(event);
+      this.cdr.markForCheck();
     });
   }
 
   elementResizeEnded(): void {
-    this.elementResized.next({
+    this.elementResized.emit({
       data: this.resizeData,
       size: { height: this.contentDirective.contentHeight, width: this.contentDirective.contentWidth },
     });

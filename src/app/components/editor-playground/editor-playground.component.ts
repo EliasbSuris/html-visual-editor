@@ -1,7 +1,17 @@
 import { CdkDrag, CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 import { NgClass, NgStyle } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Input, NgZone, Output, ViewChild, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  NgZone,
+  Output,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { ElementContainerComponent } from '@components/element-container/element-container.component';
 import { ElementContentComponent } from '@components/element-content/element-content.component';
@@ -40,6 +50,7 @@ import { ResizeContainerWidthPipe } from '@pipes/resize-container-width.pipe';
   ],
   templateUrl: './editor-playground.component.html',
   styleUrl: './editor-playground.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditorPlaygroundComponent {
   @Input()
@@ -52,6 +63,8 @@ export class EditorPlaygroundComponent {
   elementMoved = new EventEmitter<MapObject>();
   @Output()
   elementResized = new EventEmitter<MapObject>();
+  @Output()
+  elementSelected = new EventEmitter<string | null>();
 
   @ViewChild('map', { static: true }) map!: ElementRef;
   @ViewChild(PanZoomVisorDirective)
@@ -68,6 +81,8 @@ export class EditorPlaygroundComponent {
   selectedElementId: string | null = null;
 
   private zone = inject(NgZone);
+
+  private cdCounter = 0;
 
   onDragMapObject(event: CdkDragMove<MapObject>): void {
     const mapObject = event.source.data;
@@ -88,11 +103,11 @@ export class EditorPlaygroundComponent {
     const mapObject = event.source.data;
     mapObject.position.x = mapObject.adjustPosition.x;
     mapObject.position.y = mapObject.adjustPosition.y;
-    this.elementMoved.next(mapObject);
+    this.elementMoved.emit(mapObject);
   }
 
   onElementResized({ data, size: { height, width } }: ResizeEvent<MapObject>): void {
-    this.elementResized.next({ ...data, size: { height, width } });
+    this.elementResized.emit({ ...data, size: { height, width } });
   }
 
   updateZoomLevel(newZoomLevel: number): void {
@@ -101,10 +116,12 @@ export class EditorPlaygroundComponent {
 
   selectElement(elementId: string): void {
     this.selectedElementId = elementId;
+    this.elementSelected.emit(elementId);
   }
 
   unSelectElement(): void {
     this.selectedElementId = null;
+    this.elementSelected.emit(null);
   }
 
   isElementSelected(elementId: string): boolean {
@@ -113,5 +130,11 @@ export class EditorPlaygroundComponent {
 
   resetPanzoom(): void {
     this.panZoomDirective.reset();
+  }
+
+  cdFired(): void {
+    console.log('%cCD FOR EDITOR PLAYGROUND', 'color: #a5d8ff');
+    this.cdCounter++;
+    console.log(`%c${this.cdCounter}`, 'color: #a5d8ff; font-size: 18px');
   }
 }

@@ -12,4 +12,12 @@ import { ElementToSvgPipe } from '@pipes/element-to-svg.pipe';
 export class SvgElementComponent {
   @Input()
   element!: MapObject;
+
+  private cdCounter = 0;
+
+  cdFired(): void {
+    console.log(`%cCD FOR SVG ELEMENT ${this.element.text}`, 'color: #2f9e44');
+    this.cdCounter++;
+    console.log(`%c${this.cdCounter}`, 'color: #2f9e44; font-size: 18px');
+  }
 }

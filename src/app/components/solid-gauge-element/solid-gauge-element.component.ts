@@ -36,6 +36,8 @@ export class SolidGaugeElementComponent implements OnInit, OnDestroy {
     ],
   });
 
+  private cdCounter = 0;
+
   constructor(
     private elementRef: ElementRef<HTMLDivElement>,
     private zone: NgZone
@@ -64,7 +66,12 @@ export class SolidGaugeElementComponent implements OnInit, OnDestroy {
   }
 
   onChartResize(newHeight: number, newWidth: number): void {
-    console.log('hola', newHeight, newWidth);
     this.chart.setSize(newWidth, newHeight);
+  }
+
+  cdFired(): void {
+    console.log(`%cCD FOR CHART ELEMENT ${this.element.text}`, 'color: #2f9e44');
+    this.cdCounter++;
+    console.log(`%c${this.cdCounter}`, 'color: #2f9e44; font-size: 18px');
   }
 }

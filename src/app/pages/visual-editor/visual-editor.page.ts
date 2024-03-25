@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput, MatLabel } from '@angular/material/input';
@@ -15,6 +15,7 @@ import { VisorOptions } from '@models/visor-options';
   imports: [EditorPlaygroundComponent, MatFormField, MatInput, MatLabel, FormsModule],
   templateUrl: './visual-editor.page.html',
   styleUrl: './visual-editor.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VisualEditorPage {
   canvasOptions: CanvasOptions = {
@@ -35,8 +36,19 @@ export class VisualEditorPage {
 
   elements = MAP_OBJECTS;
 
+  private cdCounter = 0;
+
   onChangeCanvasOptions(key: keyof CanvasOptions, value: number): void {
     this.canvasOptions = { ...this.canvasOptions, [key]: value };
+  }
+
+  onElementSelected(elementId: string | null): void {
+    if (!elementId) {
+      console.log('ELEMENT UNSELECTED');
+      return;
+    }
+    const element = this.elements.find(element => element.id === elementId);
+    console.log('ELEMENT SELECTED', element);
   }
 
   onElementMoved(movedElement: MapObject): void {
@@ -50,5 +62,11 @@ export class VisualEditorPage {
     const element = this.elements.find(element => element.id === resizedElement.id);
     console.log('ELEMENT SIZE BEFORE RESIZE', element);
     console.log('ELEMENT SIZE AFTER RESIZE', resizedElement);
+  }
+
+  cdFired(): void {
+    console.log('%cCD FOR VISUAL EDITOR', 'color: #ffc9c9');
+    this.cdCounter++;
+    console.log(`%c${this.cdCounter}`, 'color: #ffc9c9; font-size: 18px');
   }
 }

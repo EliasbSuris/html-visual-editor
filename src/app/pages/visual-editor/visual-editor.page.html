@@ -26,7 +26,10 @@
     [mapObjects]="elements"
     [canvasOptions]="canvasOptions"
     [visorOptions]="visorOptions"
+    (elementSelected)="onElementSelected($event)"
     (elementResized)="onElementResized($event)"
     (elementMoved)="onElementMoved($event)">
   </aor-editor-playground>
 </div>
+
+<span>{{ cdFired() }}</span>

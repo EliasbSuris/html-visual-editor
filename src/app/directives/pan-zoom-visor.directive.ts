@@ -43,7 +43,6 @@ export class PanZoomVisorDirective implements OnInit, OnDestroy {
   panZoom!: PanzoomObject;
   zoomLevel!: number;
 
-  private observer!: ResizeObserver;
   private destroy$ = new Subject<void>();
   private panZoomOptions!: PanzoomOptions;
 
@@ -73,14 +72,13 @@ export class PanZoomVisorDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.observer.unobserve(this.element.nativeElement);
     this.destroy$.next();
     this.destroy$.complete();
   }
 
   public reset(): void {
     this.panZoom.reset();
-    this.zoomLevelChanged.next(this.panZoom.getScale());
+    this.zoomLevelChanged.emit(this.panZoom.getScale());
   }
 
   private subscribeToWheelEvent(): void {
@@ -98,7 +96,7 @@ export class PanZoomVisorDirective implements OnInit, OnDestroy {
   private onWheel(event: WheelEvent): void {
     const zoom = this.panZoom.zoomWithWheel(event);
     this.zoomLevel = zoom.scale;
-    this.zoomLevelChanged.next(zoom.scale);
+    this.zoomLevelChanged.emit(zoom.scale);
   }
 
   private createPanZoomOptions(options: VisorOptions): PanzoomOptions {
@@ -111,7 +109,6 @@ export class PanZoomVisorDirective implements OnInit, OnDestroy {
       maxScale: options.maxZoom,
       minScale: options.minZoom,
       step: options.zoomFactor,
-      // set
       startScale: options.initialZoom,
       startX: options.initialPan.x,
       startY: options.initialPan.y,
