@@ -4,7 +4,6 @@ import { ElementToSvgPipe } from '@pipes/element-to-svg.pipe';
 
 @Component({
   selector: 'aor-svg-element',
-  standalone: true,
   imports: [ElementToSvgPipe],
   templateUrl: './svg-element.component.html',
   styleUrl: './svg-element.component.scss',

@@ -5,7 +5,6 @@ import { Chart } from 'highcharts';
 
 @Component({
   selector: 'aor-solid-gauge-element',
-  standalone: true,
   imports: [ChartModule],
   templateUrl: './solid-gauge-element.component.html',
   styleUrl: './solid-gauge-element.component.scss',

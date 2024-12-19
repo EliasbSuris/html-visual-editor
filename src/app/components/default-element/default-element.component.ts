@@ -3,7 +3,6 @@ import { MapObject } from '@models/map-object.interface';
 
 @Component({
   selector: 'aor-default-element',
-  standalone: true,
   imports: [],
   templateUrl: './default-element.component.html',
   styleUrl: './default-element.component.scss',
