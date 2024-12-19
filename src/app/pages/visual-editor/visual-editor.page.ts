@@ -11,7 +11,6 @@ import { VisorOptions } from '@models/visor-options';
 
 @Component({
   selector: 'page-visual-editor',
-  standalone: true,
   imports: [EditorPlaygroundComponent, MatFormField, MatInput, MatLabel, FormsModule],
   templateUrl: './visual-editor.page.html',
   styleUrl: './visual-editor.page.scss',

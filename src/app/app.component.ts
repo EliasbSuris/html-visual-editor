@@ -7,7 +7,6 @@ import { APP_ROUTE } from './app.routes';
 
 @Component({
   selector: 'aor-root',
-  standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, MatSidenavModule, MatIconButton, MatIcon],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

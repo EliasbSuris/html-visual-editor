@@ -4,7 +4,6 @@ import { MapObject } from '@models/map-object.interface';
 
 @Component({
   selector: 'aor-simple-element',
-  standalone: true,
   imports: [NgStyle],
   templateUrl: './simple-element.component.html',
   styleUrl: './simple-element.component.scss',

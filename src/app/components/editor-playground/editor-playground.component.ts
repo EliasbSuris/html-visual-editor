@@ -29,7 +29,6 @@ import { ResizeContainerWidthPipe } from '@pipes/resize-container-width.pipe';
 
 @Component({
   selector: 'aor-editor-playground',
-  standalone: true,
   imports: [
     NgStyle,
     NgClass,

@@ -8,7 +8,6 @@ import {
 
 @Component({
   selector: 'aor-element-content',
-  standalone: true,
   imports: [NgComponentOutlet],
   templateUrl: './element-content.component.html',
   styleUrl: './element-content.component.scss',
