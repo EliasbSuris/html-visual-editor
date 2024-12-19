@@ -27,13 +27,6 @@ export class SolidGaugeElementComponent implements OnInit, OnDestroy {
     credits: {
       enabled: false,
     },
-    series: [
-      {
-        type: 'line',
-        name: 'Line 1',
-        data: [1, 2, 3],
-      },
-    ],
   });
 
   private cdCounter = 0;
@@ -54,6 +47,30 @@ export class SolidGaugeElementComponent implements OnInit, OnDestroy {
   subcribeToChartRef(): void {
     this.chartInstance.ref$.subscribe(chart => {
       this.chart = chart;
+      this.chart.setTitle({ text: this.element.text });
+      this.chart.addSeries({
+        type: 'line',
+        name: `Line ${this.element.id}`,
+        data: [this.element.size.height, this.element.size.width, this.element.position.x, this.element.position.y],
+      });
+      setInterval(() => {
+        this.chart.series[0].remove();
+        this.chart.addSeries(
+          {
+            type: 'line',
+            name: `Line ${this.element.id}`,
+            data: [
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+              Math.random() * 100,
+            ],
+          },
+          true
+        );
+      }, 1500);
       this.chartResizeObserver = new ResizeObserver(entries => {
         const [chart] = entries ?? [];
         if (!chart) {

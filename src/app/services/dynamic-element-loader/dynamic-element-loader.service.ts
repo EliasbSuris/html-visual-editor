@@ -20,6 +20,6 @@ export type DynamicElement = ObjectValues<typeof DYNAMIC_ELEMENT>;
 })
 export class DynamicElementLoaderService {
   getDynamicElement(type: ElementType): DynamicElement {
-    return DYNAMIC_ELEMENT[type] ?? DYNAMIC_ELEMENT['default'];
+    return DYNAMIC_ELEMENT[type] ?? DYNAMIC_ELEMENT.default;
   }
 }
