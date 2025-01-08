@@ -17,6 +17,6 @@ export const routes: Routes = [
   },
   {
     path: APP_ROUTE.VISUAL_EDITOR,
-    loadChildren: () => import('./pages/visual-editor/visual-editor.routes'),
+    loadChildren: () => import('./visual-editor/visual-editor.routes'),
   },
 ];

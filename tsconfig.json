@@ -22,11 +22,11 @@
     "lib": ["ES2022", "dom"],
     "paths": {
       "@custom-types/*": ["./src/app/types/*"],
-      "@components/*": ["./src/app/components/*"],
-      "@models/*": ["./src/app/models/*"],
-      "@directives/*": ["./src/app/directives/*"],
-      "@pipes/*": ["./src/app/pipes/*"],
-      "@services/*": ["./src/app/services/*"]
+      "@v1/components/*": ["./src/app/visual-editor/components/*"],
+      "@v1/models/*": ["./src/app/visual-editor/models/*"],
+      "@v1/directives/*": ["./src/app/visual-editor/directives/*"],
+      "@v1/pipes/*": ["./src/app/visual-editor/pipes/*"],
+      "@v1/services/*": ["./src/app/visual-editor/services/*"]
     }
   },
   "angularCompilerOptions": {
