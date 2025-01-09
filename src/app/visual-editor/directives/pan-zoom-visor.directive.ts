@@ -19,7 +19,6 @@ export const VISOR_MAX_WIDTH_LIMIT = 1200;
 
 @Directive({
   selector: '[aorPanZoomVisor]',
-  standalone: true,
 })
 export class PanZoomVisorDirective implements OnInit, OnDestroy {
   @Input()

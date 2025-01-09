@@ -1,0 +1,11 @@
+<span
+  class="text-content"
+  [ngStyle]="{
+    color: element()?.fontColor,
+    opacity: element()?.fontOpacity,
+    'font-size': element()?.fontSize + 'px',
+    'font-family': element()?.fontType,
+    transform: 'rotate(' + element()?.fontRotation + 'deg)'
+  }">
+  {{ element()?.text }}
+</span>

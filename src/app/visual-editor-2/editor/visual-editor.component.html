@@ -1,0 +1,78 @@
+<div
+  #visor
+  class="visor"
+  aorPanZoom
+  [aorPanZoomOptions]="visorOptions()"
+  [aorPanZoomRootElement]="canvas"
+  (aorPanZoomZoomLevelChanged)="onZoomLevelChanged($event)"
+  (dblclick)="unselectVisualElement()">
+  <div
+    #canvas
+    class="canvas"
+    aorResizeContainer
+    aorPanZoomCanvas
+    [aorPanZoomCanvasOptions]="canvasOptions()"
+    (click)="onClickCanvas($event)">
+    <aor-canvas-grid [canvasOptions]="canvasOptions()"> </aor-canvas-grid>
+    <div class="elements-container">
+      @for (element of visualElements(); track element.key) {
+        <aor-element-container
+          [resizable]="canvasOptions().mode === CANVAS_MODES.EDITABLE && element?.resizable"
+          [selectable]="canvasOptions().mode === CANVAS_MODES.EDITABLE && element?.selectable"
+          [zoomLevel]="state().currentZoomLevel"
+          aorResizeElement
+          [aorResizeElementContainerHeight]="element | resizeContainerHeight"
+          [aorResizeElementContainerWidth]="element | resizeContainerWidth"
+          [aorResizeElementKeepRatio]="element.keepRatio"
+          [aorResizeElementZoomLevel]="state().currentZoomLevel"
+          [aorResizeElementData]="element"
+          [aorResizeElementHasGrid]="canvasOptions().hasGrid"
+          [aorResizeElementGridX]="canvasOptions().gridX"
+          [aorResizeElementGridY]="canvasOptions().gridY"
+          [aorResizeElementMinSize]="canvasOptions().elementMinSize"
+          (aorResizeElementResized)="onElementResized($event)"
+          cdkDrag
+          cdkDragBoundary=".canvas"
+          [cdkDragDisabled]="canvasOptions().mode !== CANVAS_MODES.EDITABLE || !element?.draggable"
+          [cdkDragData]="element"
+          (cdkDragMoved)="onDragVisualElement($event)"
+          (cdkDragEnded)="onDragVisualElementEnd($event)"
+          [ngClass]="{
+            'none-clickable': canvasOptions().mode === CANVAS_MODES.CLICKABLE,
+            selected: isElementSelected(element.key),
+            'panzoom-exclude': canvasOptions().mode === CANVAS_MODES.EDITABLE && element?.draggable
+          }"
+          [ngStyle]="{
+            transform: 'translate3d(' + element?.x + 'px, ' + element?.y + 'px, 0px)',
+            'transform-origin': 'center',
+            'z-index': element?.zIndex
+          }"
+          (click)="selectVisualElement(element); $event.stopPropagation()">
+          <!-- action bar section projected into element container -->
+          <ng-container actionBar *ngTemplateOutlet="actionBar() ?? null; context: { $implicit: element }" />
+          <aor-element-content
+            [element]="element"
+            [metadata]="state()"
+            aorResizeContent
+            [aorResizeContentHeight]="element.height"
+            [aorResizeContentWidth]="element.width"
+            [aorResizeContentRotation]="element.rotation"
+            [aorVisualElementContent]="element">
+          </aor-element-content>
+        </aor-element-container>
+      }
+    </div>
+  </div>
+</div>
+@if (loading()) {
+  @if (placeholder(); as loadingPlaceholder) {
+    <!-- If has placeholder template -->
+    <aor-visual-editor-placeholder>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder" />
+    </aor-visual-editor-placeholder>
+  } @else {
+    <!-- If no placeholder template, use default value of ng-content -->
+    <!-- ng-container or if inside aor-visual-editor-placeholder makes default ng-content to not show -->
+    <aor-visual-editor-placeholder />
+  }
+}

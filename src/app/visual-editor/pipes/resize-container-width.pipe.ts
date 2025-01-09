@@ -4,7 +4,6 @@ import { MapObject } from '../models/map-object.interface';
 
 @Pipe({
   name: 'resizeContainerWidth',
-  standalone: true,
 })
 export class ResizeContainerWidthPipe implements PipeTransform {
   transform(value: MapObject): number {

@@ -1,0 +1,10 @@
+@if (element.data) {
+  <img
+    [ngSrc]="element.data.imageUrl"
+    alt="Dynamic image content"
+    priority
+    fill
+    [style.objectFit]="element.data.objectFit" />
+} @else {
+  <div>No image provided</div>
+}

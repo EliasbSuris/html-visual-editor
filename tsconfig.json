@@ -26,7 +26,15 @@
       "@v1/models/*": ["./src/app/visual-editor/models/*"],
       "@v1/directives/*": ["./src/app/visual-editor/directives/*"],
       "@v1/pipes/*": ["./src/app/visual-editor/pipes/*"],
-      "@v1/services/*": ["./src/app/visual-editor/services/*"]
+      "@v1/services/*": ["./src/app/visual-editor/services/*"],
+      "@v2/editor/action-bar/*": ["./src/app/visual-editor-2/editor/action-bar/*"],
+      "@v2/editor/canvas/*": ["./src/app/visual-editor-2/editor/canvas/*"],
+      "@v2/editor/dynamic-elements/*": ["./src/app/visual-editor-2/editor/dynamic-elements/*"],
+      "@v2/editor/elements/*": ["./src/app/visual-editor-2/editor/elements/*"],
+      "@v2/editor/panzoom/*": ["./src/app/visual-editor-2/editor/panzoom/*"],
+      "@v2/editor/placeholder/*": ["./src/app/visual-editor-2/editor/placeholder/*"],
+      "@v2/editor/resize/*": ["./src/app/visual-editor-2/editor/resize/*"],
+      "@v2/editor/visor/*": ["./src/app/visual-editor-2/editor/visor/*"]
     }
   },
   "angularCompilerOptions": {

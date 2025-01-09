@@ -2,7 +2,6 @@ import { Directive, HostBinding, Input } from '@angular/core';
 
 @Directive({
   selector: '[aorReiszetContent]',
-  standalone: true,
 })
 export class ResizeContentDirective {
   @Input()

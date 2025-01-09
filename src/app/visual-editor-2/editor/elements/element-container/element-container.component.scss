@@ -1,0 +1,24 @@
+:host {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+
+  &.selected {
+
+    .handle,
+    .action-bar {
+      opacity: 1;
+      transition: opacity 400ms ease-in, visibility 0ms ease-in 0ms;
+      visibility: visible;
+    }
+  }
+}
+
+.handle,
+.action-bar {
+  opacity: 0;
+  transition: opacity 400ms ease-out, visibility 0ms ease-out 400ms;
+  visibility: hidden;
+}

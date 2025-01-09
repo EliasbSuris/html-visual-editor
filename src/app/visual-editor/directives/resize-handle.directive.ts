@@ -29,7 +29,6 @@ type EventListener = 'mouseup' | 'mousemove';
 
 @Directive({
   selector: '[aorResizeHandle]',
-  standalone: true,
 })
 export class ResizeHandleDirective implements OnInit, OnDestroy {
   @Input()

@@ -1,0 +1,26 @@
+:host {
+  background-color: black;
+  clip-path: circle(45%);
+  display: block;
+  min-height: 10px;
+  min-width: 10px;
+  position: absolute;
+
+  &.se {
+    bottom: 0;
+    cursor: se-resize;
+    right: 0;
+  }
+
+  &.s {
+    bottom: 0;
+    cursor: s-resize;
+    right: 50%;
+  }
+
+  &.e {
+    bottom: 50%;
+    cursor: e-resize;
+    right: 0;
+  }
+}

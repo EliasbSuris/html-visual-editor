@@ -1,0 +1,14 @@
+<ng-content></ng-content>
+@if (selectable()) {
+  <section class="action-bar">
+    <ng-content select="[actionBar]"></ng-content>
+  </section>
+}
+@if (resizable()) {
+  <aor-resize-point [zoomLevel]="zoomLevel()" resizeActionClass="s" class="handle" aorResizeHandle resizeAction="S">
+  </aor-resize-point>
+  <aor-resize-point [zoomLevel]="zoomLevel()" resizeActionClass="e" class="handle" aorResizeHandle resizeAction="E">
+  </aor-resize-point>
+  <aor-resize-point [zoomLevel]="zoomLevel()" resizeActionClass="se" class="handle" aorResizeHandle resizeAction="SE">
+  </aor-resize-point>
+}

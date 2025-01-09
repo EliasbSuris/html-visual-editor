@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  background-color: transparent;
+  // This allows the click event to not be captured by the grid.
+  pointer-events: none;
+  background-image: repeating-linear-gradient(rgba(0, 0, 0, 0.12) 0 1px, transparent 1px 100%),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0 1px, transparent 1px 100%);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 400ms ease-out, visibility 0ms ease-out 400ms;
+
+  &.show {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 400ms ease-in, visibility 0ms ease-in 0ms;
+  }
+}

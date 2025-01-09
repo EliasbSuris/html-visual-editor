@@ -1,0 +1,13 @@
+<!-- USE THIS FROM ANGULAR VERSION 16.2.0 -->
+<!-- <ng-container *ngIf="dynamicElement; else noContent">
+  <ng-container *ngComponentOutlet="dynamicElement; inputs: { element: element }" />
+</ng-container>
+<ng-template #noContent>
+  <h3>DYNAMIC CONTENT FAILED TO LOAD</h3>
+</ng-template> -->
+
+<ng-template #dynamicContent />
+
+<ng-template #noContent>
+  <h3>DYNAMIC CONTENT FAILED TO LOAD</h3>
+</ng-template>

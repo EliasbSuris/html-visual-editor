@@ -33,7 +33,6 @@ export interface ResizeEvent<T> {
 
 @Directive({
   selector: '[aorResizeElement]',
-  standalone: true,
 })
 export class ResizeElementDirective<T> {
   @Input()

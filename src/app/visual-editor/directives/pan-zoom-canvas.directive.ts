@@ -2,7 +2,6 @@ import { Directive, HostBinding, Input } from '@angular/core';
 
 @Directive({
   selector: '[aorPanZoomCanvas]',
-  standalone: true,
 })
 export class PanZoomCanvasDirective {
   @Input()

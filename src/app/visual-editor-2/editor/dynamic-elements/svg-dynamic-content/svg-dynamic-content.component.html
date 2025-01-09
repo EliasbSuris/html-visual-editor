@@ -1,0 +1,9 @@
+<div
+  class="svg-container"
+  [innerHTML]="element.data | svgDynamicContent"
+  [style]="{
+    fill: element.data?.fillColor,
+    opacity: element.data?.fillOpacity,
+    stroke: element.data?.strokeColor,
+    'stroke-width': element.data?.strokeWidth + 'px'
+  }"></div>
