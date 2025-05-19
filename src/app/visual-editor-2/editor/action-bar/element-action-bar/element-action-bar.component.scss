@@ -6,9 +6,4 @@
   border-radius: 4px;
   background-color: #2A323D;
   display: flex;
-
-  &::ng-deep:not(:last-child) {
-    border-radius: 0;
-    border-right: 1px solid #3F4B5B;
-  }
 }

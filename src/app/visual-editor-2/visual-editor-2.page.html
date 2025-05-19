@@ -9,13 +9,21 @@
     (elementMoved)="onElementMoved($event)"
     (canvasClicked)="onCanvasClicked($event)">
     <aor-element-action-bar *aorElementActionBarDef="let element">
-      <button mat-mini-fab aria-label="Delete element button" (click)="onClickDeleteAction(element)">
+      <button
+        class="delete-button"
+        mat-icon-button
+        aria-label="Delete element button"
+        (click)="onClickDeleteAction(element)">
         <mat-icon>delete</mat-icon>
       </button>
-      <button mat-mini-fab aria-label="Edit element button" (click)="onClickEditAction(element)">
+      <button class="edit-button" mat-icon-button aria-label="Edit element button" (click)="onClickEditAction(element)">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-mini-fab aria-label="Duplicate element button" (click)="onClickDuplicateAction(element)">
+      <button
+        class="clone-button"
+        mat-icon-button
+        aria-label="Duplicate element button"
+        (click)="onClickDuplicateAction(element)">
         <mat-icon>content_copy</mat-icon>
       </button>
     </aor-element-action-bar>

@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 .main-container {
   height: 100%;
   width: 100%;
@@ -22,6 +24,10 @@
 
   .main-content {
     height: 100%;
+
+    header {
+      @include mat.icon-button-overrides((icon-color: var(--mat-sys-primary)));
+    }
 
     .page-content {
       padding: 1rem;

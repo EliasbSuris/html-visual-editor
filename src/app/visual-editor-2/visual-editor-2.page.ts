@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatMiniFabButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { ElementActionBarDefDirective } from './editor/action-bar/element-action-bar-def.directive';
 import { ElementActionBarComponent } from './editor/action-bar/element-action-bar/element-action-bar.component';
@@ -32,7 +32,7 @@ const MODES: Array<{ text: string; mode: CanvasMode }> = [
     ElementActionBarComponent,
     ElementActionBarDefDirective,
     VisualEditorPlaceholderDefDirective,
-    MatMiniFabButton,
+    MatIconButton,
     MatIcon,
   ],
   templateUrl: './visual-editor-2.page.html',

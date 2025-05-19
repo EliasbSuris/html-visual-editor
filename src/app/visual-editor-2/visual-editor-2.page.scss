@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 .editor {
   padding-right: 10px;
 }
@@ -5,4 +7,17 @@
 aor-visual-editor {
   height: 800px;
   overflow: hidden;
+}
+
+
+.delete-button {
+  @include mat.icon-button-overrides((icon-color: #DC143C));
+}
+
+.edit-button {
+  @include mat.icon-button-overrides((icon-color: #DAA520));
+}
+
+.clone-button {
+  @include mat.icon-button-overrides((icon-color: #1E90FF));
 }
