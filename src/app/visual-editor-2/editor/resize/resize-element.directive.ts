@@ -192,20 +192,27 @@ export class ResizeElementDirective<T = unknown> {
       case 'E':
         resizedWidth = startWidth + deltaX;
         if (keepRatio) {
-          resizedHeight = startHeight + deltaX;
+          const aspectRatio = startWidth / startHeight;
+          resizedHeight = startHeight + deltaX / aspectRatio;
         }
         break;
       case 'S':
         resizedHeight = startHeight + deltaY;
         if (keepRatio) {
-          resizedWidth = startWidth + deltaY;
+          const aspectRatio = startWidth / startHeight;
+          resizedWidth = startWidth + deltaY * aspectRatio;
         }
         break;
       case 'SE':
         if (keepRatio) {
-          const keepRatioDelta = deltaX > deltaY ? deltaX : deltaY;
-          resizedHeight = startHeight + keepRatioDelta;
-          resizedWidth = startWidth + keepRatioDelta;
+          const aspectRatio = startWidth / startHeight;
+          if (deltaX > deltaY) {
+            resizedHeight = startHeight + deltaX / aspectRatio;
+            resizedWidth = startWidth + deltaX;
+          } else {
+            resizedHeight = startHeight + deltaY;
+            resizedWidth = startWidth + deltaY * aspectRatio;
+          }
         } else {
           resizedHeight = startHeight + deltaY;
           resizedWidth = startWidth + deltaX;
